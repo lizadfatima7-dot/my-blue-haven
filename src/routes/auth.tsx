@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Eye, EyeOff, Zap } from "lucide-react";
 import { z } from "zod";
+import { normalizeSubscriberCode, setSubscriberCode } from "@/lib/subscriber-code";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -26,7 +27,7 @@ function passwordScore(pw: string) {
   return Math.min(s, 4);
 }
 
-const STRENGTH_LABEL = ["Too weak", "Weak", "Okay", "Strong", "Excellent"];
+const STRENGTH_LABEL = ["Çox zəif", "Zəif", "Normal", "Güclü", "Əla"];
 const STRENGTH_COLOR = ["bg-destructive", "bg-destructive", "bg-amber-500", "bg-accent", "bg-accent"];
 
 function AuthPage() {
@@ -50,7 +51,7 @@ function AuthPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Welcome back!");
+    toast.success("Xoş gəlmisiniz!");
     navigate({ to: "/dashboard" });
   };
 
@@ -59,27 +60,31 @@ function AuthPage() {
     const fd = new FormData(e.currentTarget);
     const schema = z.object({
       name: z.string().trim().min(1).max(60),
+      subscriberCode: z.string().trim().min(5, "Abonent kodu ən azı 5 simvol olmalıdır").max(32),
       email: z.string().trim().email().max(255),
       password: z.string().min(8).max(72),
     });
     const parsed = schema.safeParse({
       name: fd.get("name"),
+      subscriberCode: fd.get("subscriberCode"),
       email: fd.get("email"),
       password: fd.get("password"),
     });
     if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+    const subscriberCode = normalizeSubscriberCode(parsed.data.subscriberCode);
     setBusy(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
         emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: { display_name: parsed.data.name },
+        data: { display_name: parsed.data.name, electricity_subscriber_code: subscriberCode },
       },
     });
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Account created!");
+    setSubscriberCode(data.user?.id, subscriberCode);
+    toast.success("Hesab yaradıldı!");
     navigate({ to: "/profile" });
   };
 
@@ -93,7 +98,7 @@ function AuthPage() {
     });
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Check your email for the reset link.");
+    toast.success("Parol sıfırlama linki üçün e-poçtunuzu yoxlayın.");
     setForgotOpen(false);
   };
 
@@ -110,40 +115,40 @@ function AuthPage() {
         </Link>
         <Card className="glass-strong" style={{ boxShadow: "var(--shadow-elegant)" }}>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">{forgotOpen ? "Reset password" : "Welcome"}</CardTitle>
+            <CardTitle className="text-2xl">{forgotOpen ? "Parolu sıfırla" : "Xoş gəlmisiniz"}</CardTitle>
             <CardDescription>
-              {forgotOpen ? "We'll email you a reset link" : "Sign in or create your account to continue"}
+              {forgotOpen ? "Sizə parol sıfırlama linki göndərəcəyik" : "Davam etmək üçün daxil olun və ya hesab yaradın"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {forgotOpen ? (
               <form onSubmit={handleForgot} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="fp-email">Email</Label>
+                  <Label htmlFor="fp-email">E-poçt</Label>
                   <Input id="fp-email" name="email" type="email" required />
                 </div>
                 <Button type="submit" className="w-full" disabled={busy}>
-                  {busy ? "Sending…" : "Send reset link"}
+                  {busy ? "Göndərilir…" : "Sıfırlama linki göndər"}
                 </Button>
                 <Button type="button" variant="ghost" className="w-full" onClick={() => setForgotOpen(false)}>
-                  Back to sign in
+                  Daxil olmağa qayıt
                 </Button>
               </form>
             ) : (
               <Tabs defaultValue="signin">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="signin">Sign in</TabsTrigger>
-                  <TabsTrigger value="signup">Sign up</TabsTrigger>
+                  <TabsTrigger value="signin">Daxil ol</TabsTrigger>
+                  <TabsTrigger value="signup">Qeydiyyat</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="signin">
                   <form onSubmit={handleSignIn} className="space-y-4 pt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="si-email">Email</Label>
+                      <Label htmlFor="si-email">E-poçt</Label>
                       <Input id="si-email" name="email" type="email" required autoComplete="email" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="si-password">Password</Label>
+                      <Label htmlFor="si-password">Parol</Label>
                       <div className="relative">
                         <Input id="si-password" name="password" type={showPw ? "text" : "password"} required autoComplete="current-password" />
                         <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -153,14 +158,14 @@ function AuthPage() {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <label className="flex items-center gap-2">
-                        <Checkbox name="remember" defaultChecked /> <span>Remember me</span>
+                        <Checkbox name="remember" defaultChecked /> <span>Məni xatırla</span>
                       </label>
                       <button type="button" onClick={() => setForgotOpen(true)} className="text-primary hover:underline">
-                        Forgot password?
+                        Parolu unutmusunuz?
                       </button>
                     </div>
                     <Button type="submit" className="w-full" disabled={busy}>
-                      {busy ? "Signing in…" : "Sign in"}
+                      {busy ? "Daxil olunur…" : "Daxil ol"}
                     </Button>
                   </form>
                 </TabsContent>
@@ -168,15 +173,20 @@ function AuthPage() {
                 <TabsContent value="signup">
                   <form onSubmit={handleSignUp} className="space-y-4 pt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="su-name">Display name</Label>
+                      <Label htmlFor="su-name">Görünən ad</Label>
                       <Input id="su-name" name="name" type="text" required maxLength={60} />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="su-email">Email</Label>
+                      <Label htmlFor="su-email">E-poçt</Label>
                       <Input id="su-email" name="email" type="email" required maxLength={255} />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="su-password">Password</Label>
+                      <Label htmlFor="su-subscriber-code">Elektrik abonent kodu</Label>
+                      <Input id="su-subscriber-code" name="subscriberCode" type="text" required minLength={5} maxLength={32} placeholder="Məsələn: AZE-12345678" />
+                      <p className="text-xs text-muted-foreground">Bu kod fərdi enerji sərfiyyatı, borc və hesabat analitikası üçün istifadə olunacaq.</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="su-password">Parol</Label>
                       <Input
                         id="su-password" name="password" type="password" required minLength={8} maxLength={72}
                         value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password"
@@ -196,7 +206,7 @@ function AuthPage() {
                       )}
                     </div>
                     <Button type="submit" className="w-full" disabled={busy || score < 2}>
-                      {busy ? "Creating account…" : "Create account"}
+                      {busy ? "Hesab yaradılır…" : "Hesab yarat"}
                     </Button>
                   </form>
                 </TabsContent>

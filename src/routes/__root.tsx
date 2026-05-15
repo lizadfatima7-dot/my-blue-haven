@@ -11,23 +11,25 @@ import {
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
 import { ThemeProvider } from "@/lib/theme";
+import { I18nProvider } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
+import { SmartChatbot } from "@/components/SmartChatbot";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-gradient">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold">Səhifə tapılmadı</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist.
+          Axtardığınız səhifə mövcud deyil.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
           >
-            Go home
+            Ana səhifəyə qayıt
           </Link>
         </div>
       </div>
@@ -41,13 +43,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">Something went wrong</h1>
+        <h1 className="text-xl font-semibold">Nəsə xəta baş verdi</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button
           onClick={() => { router.invalidate(); reset(); }}
           className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
         >
-          Try again
+          Yenidən cəhd et
         </button>
       </div>
     </div>
@@ -59,10 +61,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Voltly — Smart Energy Management" },
-      { name: "description", content: "Monitor electricity intelligently. Reduce waste, save money, and lower your CO₂ footprint with AI-powered insights." },
-      { property: "og:title", content: "Voltly — Smart Energy Management" },
-      { property: "og:description", content: "AI-powered energy monitoring with real-time analytics and device control." },
+      { title: "Voltly — Ağıllı Enerji İdarəetməsi" },
+      { name: "description", content: "Elektrik istifadəsini ağıllı izləyin, israfı azaldın, xərclərə qənaət edin və CO₂ izinizi aşağı salın." },
+      { property: "og:title", content: "Voltly — Ağıllı Enerji İdarəetməsi" },
+      { property: "og:description", content: "Real vaxt analitikası və cihaz nəzarəti ilə süni intellekt əsaslı enerji monitorinqi." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -74,7 +76,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="az" suppressHydrationWarning>
       <head><HeadContent /></head>
       <body>
         {children}
@@ -89,10 +91,13 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <Outlet />
-          <Toaster richColors position="top-right" />
-        </AuthProvider>
+        <I18nProvider>
+          <AuthProvider>
+            <Outlet />
+            <SmartChatbot />
+            <Toaster richColors position="top-right" />
+          </AuthProvider>
+        </I18nProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

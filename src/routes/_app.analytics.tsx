@@ -31,16 +31,16 @@ function Analytics() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-4 md:p-8">
       <div>
-        <p className="text-sm text-muted-foreground">Analytics</p>
-        <h1 className="text-3xl font-bold tracking-tight">Detailed insights</h1>
+        <p className="text-sm text-muted-foreground">Analitika</p>
+        <h1 className="text-3xl font-bold tracking-tight">Ətraflı enerji analizləri</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Peak usage today: <span className="font-medium text-foreground">{peakHour?.hour}</span> at {peakHour?.usage} kWh
+          Bugünkü pik istifadə: <span className="font-medium text-foreground">{peakHour?.hour}</span> — {peakHour?.usage} kWh
         </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle>Daily usage (30 days)</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Gündəlik istifadə — son 30 gün</CardTitle></CardHeader>
           <CardContent className="h-[280px]">
             <ResponsiveContainer>
               <LineChart data={daily}>
@@ -54,7 +54,7 @@ function Analytics() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Monthly comparison</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Aylıq müqayisə</CardTitle></CardHeader>
           <CardContent className="h-[280px]">
             <ResponsiveContainer>
               <BarChart data={monthly}>
@@ -70,10 +70,10 @@ function Analytics() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Energy by device</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Cihazlar üzrə enerji sərfiyyatı</CardTitle></CardHeader>
         <CardContent className="h-[320px]">
           {breakdown.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">No devices yet.</div>
+            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Hələ cihaz əlavə edilməyib.</div>
           ) : (
             <ResponsiveContainer>
               <PieChart>

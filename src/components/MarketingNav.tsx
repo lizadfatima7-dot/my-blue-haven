@@ -1,15 +1,22 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useTheme } from "@/lib/theme";
+import { languages, useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Zap } from "lucide-react";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Check, ChevronDown, Globe2, Moon, Sun, Zap } from "lucide-react";
 
 export function MarketingNav() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { theme, toggle } = useTheme();
+  const { language, setLanguage, t } = useI18n();
+  const activeLanguage = languages.find((item) => item.code === language) ?? languages[0];
   const items = [
-    { to: "/", label: "Home" },
-    { to: "/about", label: "About" },
-    { to: "/contact", label: "Contact" },
+    { to: "/", label: t("navHome") },
+    { to: "/about", label: t("navAbout") },
+    { to: "/contact", label: t("navContact") },
   ];
   return (
     <header className="sticky top-0 z-40 w-full">
@@ -32,11 +39,34 @@ export function MarketingNav() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 rounded-xl bg-background/60">
+                <Globe2 className="h-4 w-4" />
+                <span className="hidden sm:inline">{activeLanguage.nativeName}</span>
+                <span className="sm:hidden">{activeLanguage.code.toUpperCase()}</span>
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuLabel>{t("languageSelector")}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {languages.map((item) => (
+                <DropdownMenuItem key={item.code} onClick={() => setLanguage(item.code)} className="justify-between">
+                  <span className="flex items-center gap-2">
+                    <span>{item.flag}</span>
+                    <span>{item.nativeName}</span>
+                  </span>
+                  {item.code === language && <Check className="h-4 w-4 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button variant="ghost" size="icon" onClick={toggle} aria-label={t("toggleTheme")}>
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex"><Link to="/auth">Sign in</Link></Button>
-          <Button asChild size="sm"><Link to="/auth">Get started</Link></Button>
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex"><Link to="/auth">{t("signIn")}</Link></Button>
+          <Button asChild size="sm"><Link to="/auth">{t("getStarted")}</Link></Button>
         </div>
       </div>
     </header>

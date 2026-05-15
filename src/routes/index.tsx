@@ -5,6 +5,7 @@ import { Activity, ArrowRight, BarChart3, Bot, Gauge, LeafyGreen, ShieldCheck, S
 import { Button } from "@/components/ui/button";
 import { MarketingNav } from "@/components/MarketingNav";
 import { MarketingFooter } from "@/components/MarketingFooter";
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -37,6 +38,16 @@ function Home() {
   const users = useCounter(12450);
   const kwh = useCounter(842000);
   const co2 = useCounter(354);
+  const { t } = useI18n();
+  const features = t<string[]>("features").map((feature) => {
+    const [title, text] = feature.split("|");
+    return { title, text };
+  });
+  const featureIcons = [Gauge, BarChart3, Bot, LeafyGreen, ShieldCheck, Sparkles];
+  const faqs = t<string[]>("faqs").map((item) => {
+    const [question, answer] = item.split("|");
+    return { question, answer };
+  });
 
   return (
     <div className="min-h-screen" style={{ background: "var(--gradient-soft)" }}>
@@ -53,21 +64,22 @@ function Home() {
             className="mx-auto max-w-3xl text-center"
           >
             <span className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs font-medium">
-              <Sparkles className="h-3.5 w-3.5 text-accent" /> AI-powered energy intelligence
+              <Sparkles className="h-3.5 w-3.5 text-accent" /> {t("heroBadge")}
             </span>
             <h1 className="mt-6 text-balance text-5xl font-bold tracking-tight md:text-7xl">
-              Power your home,{" "}
-              <span className="text-gradient">smarter</span>
+              {t("heroTitleStart")}{" "}
+              <span className="text-gradient">{t("heroTitleHighlight")}</span>{" "}
+              {t("heroTitleEnd")}
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
-              Monitor your electricity usage intelligently and reduce energy waste. Voltly turns raw data into clear, actionable insights.
+              {t("heroDescription")}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg" className="gap-2 hover-lift">
-                <Link to="/auth">Get started <ArrowRight className="h-4 w-4" /></Link>
+                <Link to="/auth">{t<string>("getStarted")} <ArrowRight className="h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="gap-2">
-                <Link to="/dashboard">Live demo</Link>
+                <Link to="/dashboard">{t("liveDemo")}</Link>
               </Button>
             </div>
           </motion.div>
@@ -85,7 +97,7 @@ function Home() {
                   <span className="absolute inset-0 rounded-full bg-accent live-dot" />
                   <span className="relative inline-block h-2 w-2 rounded-full bg-accent" />
                 </span>
-                <p className="text-sm font-medium">Live usage — last 24 hours</p>
+                <p className="text-sm font-medium">{t("liveUsage")}</p>
               </div>
               <p className="text-sm text-muted-foreground">kWh</p>
             </div>
@@ -114,9 +126,9 @@ function Home() {
         {/* STATS */}
         <section className="mt-20 grid gap-4 md:grid-cols-3">
           {[
-            { label: "Active homes", value: users, suffix: "+", icon: Activity },
-            { label: "kWh monitored", value: kwh, suffix: "+", icon: Zap },
-            { label: "Tons of CO₂ saved", value: co2, suffix: "", icon: LeafyGreen },
+            { label: t("activeHomes"), value: users, suffix: "+", icon: Activity },
+            { label: t("kwhMonitored"), value: kwh, suffix: "+", icon: Zap },
+            { label: t("co2Saved"), value: co2, suffix: "", icon: LeafyGreen },
           ].map((s, i) => (
             <motion.div
               key={s.label}
@@ -138,18 +150,13 @@ function Home() {
         {/* FEATURES */}
         <section className="mt-24">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Everything you need to save energy</h2>
-            <p className="mt-3 text-muted-foreground">A complete toolkit for understanding, controlling, and optimizing how your home uses power.</p>
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("featuresTitle")}</h2>
+            <p className="mt-3 text-muted-foreground">{t("featuresDescription")}</p>
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: Gauge, title: "Real-time monitoring", text: "Live voltage, current usage, and active devices update every second." },
-              { icon: BarChart3, title: "Rich analytics", text: "Daily, weekly and monthly trends with peak-hour analysis." },
-              { icon: Bot, title: "AI recommendations", text: "Personalized tips that learn from your usage patterns." },
-              { icon: LeafyGreen, title: "CO₂ impact tracker", text: "See your carbon footprint and how much you've offset." },
-              { icon: ShieldCheck, title: "Private & secure", text: "Bank-grade encryption and per-user data isolation." },
-              { icon: Sparkles, title: "Smart home ready", text: "Connect appliances and automate savings without code." },
-            ].map((f, i) => (
+            {features.map((f, i) => {
+              const Icon = featureIcons[i];
+              return (
               <motion.div
                 key={f.title}
                 initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
@@ -158,23 +165,38 @@ function Home() {
                 style={{ backgroundImage: "var(--gradient-card)" }}
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl text-primary-foreground" style={{ background: "var(--gradient-blue)" }}>
-                  <f.icon className="h-5 w-5" />
+                  <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{f.text}</p>
               </motion.div>
+            )})}
+          </div>
+        </section>
+
+        <section className="mt-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("faqTitle")}</h2>
+            <p className="mt-3 text-muted-foreground">{t("faqDescription")}</p>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-4">
+            {faqs.map((faq) => (
+              <div key={faq.question} className="rounded-2xl border bg-card p-5 hover-lift" style={{ backgroundImage: "var(--gradient-card)" }}>
+                <h3 className="font-semibold">{faq.question}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{faq.answer}</p>
+              </div>
             ))}
           </div>
         </section>
 
         {/* CTA */}
         <section className="mt-24 overflow-hidden rounded-3xl p-10 text-center" style={{ background: "var(--gradient-hero)", color: "white", boxShadow: "var(--shadow-elegant)" }}>
-          <h3 className="text-3xl font-bold md:text-4xl">Start saving today</h3>
+          <h3 className="text-3xl font-bold md:text-4xl">{t("ctaTitle")}</h3>
           <p className="mx-auto mt-3 max-w-xl text-white/85">
-            Create your free account, add your devices, and watch your energy bill shrink.
+            {t("ctaDescription")}
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-6 gap-2">
-            <Link to="/auth">Create account <ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/auth">{t<string>("createAccount")} <ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </section>
       </main>

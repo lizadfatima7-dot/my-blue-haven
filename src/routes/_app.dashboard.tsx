@@ -12,7 +12,7 @@ import {
 import { Activity, Bot, DollarSign, LeafyGreen, Sparkles, TrendingDown, Zap } from "lucide-react";
 import {
   type Device, aiRecommendations, deviceBreakdown, generateDaily, generateHourly,
-  generateMonthly, monthlyCO2, monthlyCost, monthlyKwh,
+  generateMonthly, getEffectiveDevices, monthlyCO2, monthlyCost, monthlyKwh,
 } from "@/lib/energy";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
@@ -36,16 +36,18 @@ function Dashboard() {
   const hourly = useMemo(() => generateHourly(devices), [devices]);
   const daily = useMemo(() => generateDaily(devices), [devices]);
   const monthly = useMemo(() => generateMonthly(devices), [devices]);
+  const effectiveDevices = useMemo(() => getEffectiveDevices(devices), [devices]);
   const breakdown = useMemo(() => deviceBreakdown(devices), [devices]);
   const recs = useMemo(() => aiRecommendations(devices), [devices]);
+  const activeDeviceCount = breakdown.length;
 
   const totalKwh = monthlyKwh(devices);
   const cost = monthlyCost(devices);
   const co2 = monthlyCO2(devices);
-  const saved = Math.max(0, Math.min(35, 8 + devices.filter((d) => !d.status).length * 4));
+  const saved = Math.max(12, Math.min(35, 18 + effectiveDevices.filter((d) => !d.status).length * 4));
 
   useEffect(() => {
-    const watts = devices.filter((d) => d.status).reduce((s, d) => s + d.watts, 0);
+    const watts = effectiveDevices.filter((d) => d.status).reduce((s, d) => s + d.watts, 0);
     const id = setInterval(() => {
       setLive({
         voltage: 218 + Math.round(Math.random() * 8),
@@ -54,13 +56,14 @@ function Dashboard() {
       });
     }, 1500);
     return () => clearInterval(id);
-  }, [devices]);
+  }, [effectiveDevices]);
 
   const stats = [
-    { label: "Total energy (mo)", value: `${totalKwh.toFixed(0)} kWh`, icon: Zap, grad: "var(--gradient-blue)" },
-    { label: "Monthly cost", value: `$${cost.toFixed(2)}`, icon: DollarSign, grad: "var(--gradient-amber)" },
-    { label: "Saved energy", value: `${saved}%`, icon: TrendingDown, grad: "var(--gradient-green)" },
-    { label: "CO₂ reduction", value: `${(co2 * (saved / 100)).toFixed(1)} kg`, icon: LeafyGreen, grad: "var(--gradient-aqua)" },
+    { label: "Aylıq enerji", value: `${totalKwh.toFixed(0)} kWh`, icon: Zap, grad: "var(--gradient-blue)" },
+    { label: "Aylıq xərc", value: `${cost.toFixed(2)} AZN`, icon: DollarSign, grad: "var(--gradient-amber)" },
+    { label: "Qənaət göstəricisi", value: `${saved}%`, icon: TrendingDown, grad: "var(--gradient-green)" },
+    { label: "CO₂ azalması", value: `${(co2 * (saved / 100)).toFixed(1)} kg`, icon: LeafyGreen, grad: "var(--gradient-aqua)" },
+    { label: "Aktiv cihazlar", value: `${activeDeviceCount}`, icon: Activity, grad: "var(--gradient-blue)" },
   ];
 
   return (
@@ -69,7 +72,7 @@ function Dashboard() {
         <div>
           <p className="text-sm text-muted-foreground">Dashboard</p>
           <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Welcome back{name ? `, ${name}` : ""}
+            Xoş gəlmisiniz{name ? `, ${name}` : ""}
           </h1>
         </div>
         <Badge variant="secondary" className="gap-1.5">
@@ -77,7 +80,7 @@ function Dashboard() {
             <span className="absolute inset-0 rounded-full bg-accent live-dot" />
             <span className="relative inline-block h-2 w-2 rounded-full bg-accent" />
           </span>
-          Live
+          Canlı
         </Badge>
       </div>
 
@@ -99,7 +102,7 @@ function Dashboard() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader><CardTitle>Today's usage by hour</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Bugünkü saatlıq enerji istifadəsi</CardTitle></CardHeader>
           <CardContent className="h-[280px]">
             <ResponsiveContainer>
               <AreaChart data={hourly}>
@@ -119,13 +122,13 @@ function Dashboard() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle className="flex items-center gap-2"><Activity className="h-4 w-4" /> Live monitor</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2"><Activity className="h-4 w-4" /> Canlı monitorinq</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             {[
-              { label: "Voltage", value: `${live.voltage} V` },
-              { label: "Current", value: `${live.current} A` },
-              { label: "Power", value: `${live.watts} W` },
-              { label: "Active devices", value: `${devices.filter((d) => d.status).length}` },
+              { label: "Gərginlik", value: `${live.voltage} V` },
+              { label: "Cərəyan", value: `${live.current} A` },
+              { label: "Güc", value: `${live.watts} W` },
+              { label: "Aktiv cihazlar", value: `${effectiveDevices.filter((d) => d.status).length}` },
             ].map((m) => (
               <div key={m.label} className="flex items-center justify-between rounded-lg border p-3">
                 <span className="text-sm text-muted-foreground">{m.label}</span>
@@ -138,10 +141,10 @@ function Dashboard() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle>Device breakdown</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Cihazlar üzrə enerji bölgüsü</CardTitle></CardHeader>
           <CardContent className="h-[280px]">
             {breakdown.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Add devices to see breakdown</div>
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Bölgünü görmək üçün cihaz əlavə edin</div>
             ) : (
               <ResponsiveContainer>
                 <PieChart>
@@ -156,7 +159,7 @@ function Dashboard() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Monthly comparison</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Aylıq müqayisə</CardTitle></CardHeader>
           <CardContent className="h-[280px]">
             <ResponsiveContainer>
               <BarChart data={monthly}>
@@ -177,7 +180,7 @@ function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Bot className="h-4 w-4 text-accent" /> AI recommendations</CardTitle>
+          <CardTitle className="flex items-center gap-2"><Bot className="h-4 w-4 text-accent" /> AI tövsiyələri</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-2">
           {recs.map((r, i) => (
@@ -197,7 +200,7 @@ function Dashboard() {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>30-day trend</CardTitle></CardHeader>
+        <CardHeader><CardTitle>30 günlük trend</CardTitle></CardHeader>
         <CardContent className="h-[260px]">
           <ResponsiveContainer>
             <LineChart data={daily}>

@@ -17,15 +17,15 @@ import { Button } from "@/components/ui/button";
 
 const main = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Devices", url: "/devices", icon: Cpu },
-  { title: "Reports", url: "/reports", icon: FileText },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Analitika", url: "/analytics", icon: BarChart3 },
+  { title: "Cihazlar", url: "/devices", icon: Cpu },
+  { title: "Hesabatlar", url: "/reports", icon: FileText },
+  { title: "Parametrlər", url: "/settings", icon: Settings },
 ];
 
 const more = [
-  { title: "About", url: "/about", icon: Info },
-  { title: "Contact", url: "/contact", icon: Mail },
+  { title: "Haqqımızda", url: "/about", icon: Info },
+  { title: "Əlaqə", url: "/contact", icon: Mail },
 ];
 
 export function AppSidebar() {
@@ -50,7 +50,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel>İş sahəsi</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {main.map((item) => (
@@ -67,7 +67,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>More</SidebarGroupLabel>
+          <SidebarGroupLabel>Əlavə</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {more.map((item) => (
@@ -88,7 +88,7 @@ export function AppSidebar() {
         <div className="flex flex-col gap-1 p-2">
           <p className="truncate px-2 text-xs text-muted-foreground">{user?.email}</p>
           <Button variant="ghost" size="sm" onClick={handleSignOut} className="justify-start gap-2">
-            <LogOut className="h-4 w-4" /> Sign out
+            <LogOut className="h-4 w-4" /> Çıxış
           </Button>
         </div>
       </SidebarFooter>

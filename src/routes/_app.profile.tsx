@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { getSubscriberCode, setSubscriberCode, normalizeSubscriberCode } from "@/lib/subscriber-code";
 
 export const Route = createFileRoute("/_app/profile")({
   component: Profile,
@@ -18,6 +19,7 @@ function Profile() {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [subscriberCode, setSubscriberCodeState] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -27,6 +29,7 @@ function Profile() {
       .then(({ data }) => {
         setDisplayName(data?.display_name ?? "");
         setBio(data?.bio ?? "");
+        setSubscriberCodeState(getSubscriberCode(user.id, user.user_metadata?.electricity_subscriber_code));
         setLoading(false);
       });
   }, [user]);
@@ -40,7 +43,8 @@ function Profile() {
       .upsert({ id: user.id, display_name: displayName, bio });
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Profile saved");
+    setSubscriberCode(user.id, subscriberCode);
+    toast.success("Profil yadda saxlanıldı");
   };
 
   const initial = (displayName || user?.email || "?").charAt(0).toUpperCase();
@@ -48,8 +52,8 @@ function Profile() {
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6 md:p-10">
       <div>
-        <p className="text-sm text-muted-foreground">Account</p>
-        <h1 className="text-3xl font-bold tracking-tight">Your profile</h1>
+        <p className="text-sm text-muted-foreground">Hesab</p>
+        <h1 className="text-3xl font-bold tracking-tight">Profiliniz</h1>
       </div>
 
       <Card style={{ boxShadow: "var(--shadow-card)" }}>
@@ -61,7 +65,7 @@ function Profile() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle>{displayName || "Unnamed"}</CardTitle>
+              <CardTitle>{displayName || "Adsız istifadəçi"}</CardTitle>
               <CardDescription>{user?.email}</CardDescription>
             </div>
           </div>
@@ -69,7 +73,7 @@ function Profile() {
         <CardContent>
           <form onSubmit={handleSave} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Display name</Label>
+              <Label htmlFor="name">Görünən ad</Label>
               <Input
                 id="name"
                 value={displayName}
@@ -78,18 +82,30 @@ function Profile() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
+              <Label htmlFor="subscriber-code">Elektrik abonent kodu</Label>
+              <Input
+                id="subscriber-code"
+                value={subscriberCode}
+                onChange={(e) => setSubscriberCodeState(normalizeSubscriberCode(e.target.value))}
+                disabled={loading}
+                maxLength={32}
+                placeholder="AZE-12345678"
+              />
+              <p className="text-xs text-muted-foreground">Bu kod fərdi enerji monitorinqi, borc məlumatı və istifadə analitikası üçün istifadə olunur.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bioqrafiya</Label>
               <Textarea
                 id="bio"
                 rows={4}
-                placeholder="Tell us a little about yourself"
+                placeholder="Özünüz haqqında qısa məlumat yazın"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 disabled={loading}
               />
             </div>
             <Button type="submit" disabled={saving || loading}>
-              {saving ? "Saving…" : "Save changes"}
+              {saving ? "Yadda saxlanılır…" : "Dəyişiklikləri yadda saxla"}
             </Button>
           </form>
         </CardContent>

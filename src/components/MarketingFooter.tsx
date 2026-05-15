@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
+import { useI18n } from "@/lib/i18n";
 import { Zap } from "lucide-react";
 
 export function MarketingFooter() {
+  const { t } = useI18n();
+
   return (
     <footer className="border-t bg-card/40 py-10 mt-20">
       <div className="mx-auto grid max-w-6xl gap-8 px-6 md:grid-cols-3">
@@ -13,27 +16,27 @@ export function MarketingFooter() {
             <span className="font-semibold">Voltly</span>
           </Link>
           <p className="mt-3 text-sm text-muted-foreground">
-            Smart energy management for modern homes.
+            {t("footerDescription")}
           </p>
         </div>
         <div className="text-sm">
-          <p className="font-medium">Product</p>
+          <p className="font-medium">{t("product")}</p>
           <ul className="mt-3 space-y-2 text-muted-foreground">
-            <li><Link to="/" className="hover:text-foreground">Home</Link></li>
-            <li><Link to="/auth" className="hover:text-foreground">Sign in</Link></li>
-            <li><Link to="/dashboard" className="hover:text-foreground">Dashboard</Link></li>
+            <li><Link to="/" className="hover:text-foreground">{t("navHome")}</Link></li>
+            <li><Link to="/auth" className="hover:text-foreground">{t("signIn")}</Link></li>
+            <li><Link to="/dashboard" className="hover:text-foreground">{t("dashboard")}</Link></li>
           </ul>
         </div>
         <div className="text-sm">
-          <p className="font-medium">Company</p>
+          <p className="font-medium">{t("company")}</p>
           <ul className="mt-3 space-y-2 text-muted-foreground">
-            <li><Link to="/about" className="hover:text-foreground">About</Link></li>
-            <li><Link to="/contact" className="hover:text-foreground">Contact</Link></li>
+            <li><Link to="/about" className="hover:text-foreground">{t("navAbout")}</Link></li>
+            <li><Link to="/contact" className="hover:text-foreground">{t("navContact")}</Link></li>
           </ul>
         </div>
       </div>
       <p className="mt-10 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Voltly. Designed with care.
+        © {new Date().getFullYear()} Voltly. {t("footerCare")}
       </p>
     </footer>
   );
