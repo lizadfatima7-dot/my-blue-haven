@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      devices: {
+        Row: {
+          created_at: string
+          daily_hours: number
+          id: string
+          name: string
+          status: boolean
+          type: string
+          updated_at: string
+          user_id: string
+          watts: number
+        }
+        Insert: {
+          created_at?: string
+          daily_hours?: number
+          id?: string
+          name: string
+          status?: boolean
+          type: string
+          updated_at?: string
+          user_id: string
+          watts?: number
+        }
+        Update: {
+          created_at?: string
+          daily_hours?: number
+          id?: string
+          name?: string
+          status?: boolean
+          type?: string
+          updated_at?: string
+          user_id?: string
+          watts?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
