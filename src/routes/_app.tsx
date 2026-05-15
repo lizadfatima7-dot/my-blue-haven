@@ -1,8 +1,9 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { AppNavbar } from "@/components/AppNavbar";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -19,7 +20,10 @@ function AppLayout() {
   if (loading || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center text-muted-foreground">
-        Loading…
+        <div className="flex items-center gap-3">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          Loading…
+        </div>
       </div>
     );
   }
@@ -29,11 +33,8 @@ function AppLayout() {
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <header className="flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
-            <SidebarTrigger />
-            <span className="text-sm font-medium text-muted-foreground">Workspace</span>
-          </header>
-          <main className="flex-1 bg-muted/30">
+          <AppNavbar />
+          <main className="flex-1" style={{ background: "var(--gradient-soft)" }}>
             <Outlet />
           </main>
         </div>
