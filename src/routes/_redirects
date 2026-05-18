@@ -1,1 +1,1 @@
-/* /index.html 200
+﻿export { Route } from '../../frontend/src/routes/_redirects';
