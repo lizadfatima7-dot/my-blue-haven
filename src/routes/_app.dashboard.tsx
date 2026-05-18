@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart,
   Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
@@ -75,13 +76,18 @@ function Dashboard() {
             Xoş gəlmisiniz{name ? `, ${name}` : ""}
           </h1>
         </div>
-        <Badge variant="secondary" className="gap-1.5">
-          <span className="relative inline-flex h-2 w-2">
-            <span className="absolute inset-0 rounded-full bg-accent live-dot" />
-            <span className="relative inline-block h-2 w-2 rounded-full bg-accent" />
-          </span>
-          Canlı
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline">
+            <Link to="/">Ana səhifəyə qayıt</Link>
+          </Button>
+          <Badge variant="secondary" className="gap-1.5">
+            <span className="relative inline-flex h-2 w-2">
+              <span className="absolute inset-0 rounded-full bg-accent live-dot" />
+              <span className="relative inline-block h-2 w-2 rounded-full bg-accent" />
+            </span>
+            Canlı
+          </Badge>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -180,7 +186,7 @@ function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Bot className="h-4 w-4 text-accent" /> AI tövsiyələri</CardTitle>
+          <CardTitle className="flex items-center gap-2"><Bot className="h-4 w-4 text-accent" /> Ağıllı tövsiyələr</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-2">
           {recs.map((r, i) => (

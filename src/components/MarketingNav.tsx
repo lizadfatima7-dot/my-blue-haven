@@ -25,7 +25,7 @@ export function MarketingNav() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl text-primary-foreground" style={{ background: "var(--gradient-blue)" }}>
             <Zap className="h-5 w-5" />
           </div>
-          <span className="font-semibold tracking-tight">Voltly</span>
+          <span className="font-semibold tracking-tight">Voltix</span>
         </Link>
         <nav className="hidden gap-1 md:flex">
           {items.map((i) => (

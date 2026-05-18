@@ -20,7 +20,7 @@ type ChatCopy = {
 
 const chatCopy: Record<Language, ChatCopy> = {
   az: {
-    title: "Voltly köməkçisi",
+    title: "Voltix köməkçisi",
     subtitle: "Enerji, cihazlar və hesabatlar üzrə cavablar",
     placeholder: "Sualınızı yazın...",
     language: "Dil",
@@ -31,13 +31,13 @@ const chatCopy: Record<Language, ChatCopy> = {
       { keywords: ["enerji", "istifadə", "kwh", "gündəlik", "aylıq"], answer: "Dashboard gündəlik və aylıq kWh istifadəsini, canlı gücü, saatlıq pikləri və 30 günlük trendləri göstərir." },
       { keywords: ["qiymət", "xərc", "pul", "tarif"], answer: "Sistem kWh istifadəsini elektrik tarifi ilə hesablayaraq təxmini aylıq xərci göstərir." },
       { keywords: ["cihaz", "monitor", "aktiv", "söndür"], answer: "Cihazlar bölməsində hər cihazın gücü, gündəlik işləmə saatı və aktiv/passiv statusu izlənir." },
-      { keywords: ["pdf", "excel", "hesabat", "yüklə"], answer: "Reports bölməsindən professional PDF və Excel hesabatlarını yükləyə bilərsiniz. Hesabatlarda xülasə, cədvəllər və cihaz statistikası var." },
+      { keywords: ["pdf", "excel", "hesabat", "yüklə"], answer: "Hesabatlar bölməsindən professional PDF və Excel hesabatlarını yükləyə bilərsiniz. Hesabatlarda xülasə, cədvəllər və cihaz statistikası var." },
       { keywords: ["hesab", "ayar", "profil", "parol"], answer: "Account və Settings bölmələrində profil məlumatlarını, görünüş rejimini və hesab seçimlərini idarə edə bilərsiniz." },
-      { keywords: ["co2", "karbon", "qənaət", "azalt"], answer: "Voltly qənaət edilmiş enerji faizini və CO₂ azalma göstəricisini hesablayaraq ətraf mühit təsirinizi göstərir." },
+      { keywords: ["co2", "karbon", "qənaət", "azalt"], answer: "Voltix qənaət edilmiş enerji faizini və CO₂ azalma göstəricisini hesablayaraq ətraf mühit təsirinizi göstərir." },
     ],
   },
   en: {
-    title: "Voltly assistant",
+    title: "Voltix assistant",
     subtitle: "Answers about energy, devices, and reports",
     placeholder: "Type your question...",
     language: "Language",
@@ -46,15 +46,15 @@ const chatCopy: Record<Language, ChatCopy> = {
     suggestions: ["How much energy did I use this month?", "How do I download a PDF report?", "How does device monitoring work?"],
     answers: [
       { keywords: ["energy", "usage", "kwh", "daily", "monthly"], answer: "The dashboard shows daily and monthly kWh usage, live power, hourly peaks, and 30-day trends." },
-      { keywords: ["cost", "price", "bill", "tariff"], answer: "Voltly estimates monthly electricity cost by multiplying your kWh usage by the configured energy tariff." },
+      { keywords: ["cost", "price", "bill", "tariff"], answer: "Voltix estimates monthly electricity cost by multiplying your kWh usage by the configured energy tariff." },
       { keywords: ["device", "monitor", "active", "turn off"], answer: "The Devices section tracks each appliance's power rating, daily runtime, and active/inactive status." },
       { keywords: ["pdf", "excel", "report", "download"], answer: "Open Reports to download professional PDF and Excel files with summaries, tables, and device statistics." },
       { keywords: ["account", "settings", "profile", "password"], answer: "Use Account and Settings to manage profile details, appearance mode, and account preferences." },
-      { keywords: ["co2", "carbon", "saved", "reduce"], answer: "Voltly estimates saved energy percentage and carbon emission reduction to show your environmental impact." },
+      { keywords: ["co2", "carbon", "saved", "reduce"], answer: "Voltix estimates saved energy percentage and carbon emission reduction to show your environmental impact." },
     ],
   },
   tr: {
-    title: "Voltly asistanı",
+    title: "Voltix asistanı",
     subtitle: "Enerji, cihazlar ve raporlar hakkında cevaplar",
     placeholder: "Sorunuzu yazın...",
     language: "Dil",
@@ -63,15 +63,15 @@ const chatCopy: Record<Language, ChatCopy> = {
     suggestions: ["Bu ay ne kadar enerji kullandım?", "PDF raporu nasıl indiririm?", "Cihaz izleme nasıl çalışır?"],
     answers: [
       { keywords: ["enerji", "kullanım", "kwh", "günlük", "aylık"], answer: "Dashboard günlük ve aylık kWh kullanımını, canlı gücü, saatlik zirveleri ve 30 günlük trendleri gösterir." },
-      { keywords: ["maliyet", "fiyat", "fatura", "tarife"], answer: "Voltly, kWh kullanımınızı enerji tarifesiyle çarparak tahmini aylık elektrik maliyetini hesaplar." },
+      { keywords: ["maliyet", "fiyat", "fatura", "tarife"], answer: "Voltix, kWh kullanımınızı enerji tarifesiyle çarparak tahmini aylık elektrik maliyetini hesaplar." },
       { keywords: ["cihaz", "izleme", "aktif", "kapat"], answer: "Cihazlar bölümünde her cihazın gücü, günlük çalışma süresi ve aktif/pasif durumu izlenir." },
       { keywords: ["pdf", "excel", "rapor", "indir"], answer: "Reports bölümünden özetler, tablolar ve cihaz istatistikleri içeren profesyonel PDF ve Excel dosyaları indirebilirsiniz." },
       { keywords: ["hesap", "ayar", "profil", "şifre"], answer: "Account ve Settings bölümlerinden profil bilgilerini, görünüm modunu ve hesap tercihlerini yönetebilirsiniz." },
-      { keywords: ["co2", "karbon", "tasarruf", "azalt"], answer: "Voltly, çevresel etkinizi göstermek için tasarruf edilen enerji yüzdesini ve karbon emisyonu azalmasını hesaplar." },
+      { keywords: ["co2", "karbon", "tasarruf", "azalt"], answer: "Voltix, çevresel etkinizi göstermek için tasarruf edilen enerji yüzdesini ve karbon emisyonu azalmasını hesaplar." },
     ],
   },
   ru: {
-    title: "Помощник Voltly",
+    title: "Помощник Voltix",
     subtitle: "Ответы об энергии, устройствах и отчётах",
     placeholder: "Введите вопрос...",
     language: "Язык",
@@ -80,11 +80,11 @@ const chatCopy: Record<Language, ChatCopy> = {
     suggestions: ["Сколько энергии я использовал за месяц?", "Как скачать PDF отчёт?", "Как работает мониторинг устройств?"],
     answers: [
       { keywords: ["энерг", "расход", "квт", "день", "месяц"], answer: "Панель показывает дневное и месячное потребление кВт⋅ч, текущую мощность, пиковые часы и тренды за 30 дней." },
-      { keywords: ["стоим", "цена", "счет", "тариф"], answer: "Voltly оценивает месячную стоимость электричества, умножая потребление кВт⋅ч на тариф." },
+      { keywords: ["стоим", "цена", "счет", "тариф"], answer: "Voltix оценивает месячную стоимость электричества, умножая потребление кВт⋅ч на тариф." },
       { keywords: ["устрой", "монитор", "актив", "выключ"], answer: "Раздел Devices отслеживает мощность, время работы и активный/неактивный статус каждого прибора." },
       { keywords: ["pdf", "excel", "отчет", "скач"], answer: "В разделе Reports можно скачать профессиональные PDF и Excel файлы со сводками, таблицами и статистикой устройств." },
       { keywords: ["аккаунт", "настрой", "профиль", "пароль"], answer: "В Account и Settings можно управлять профилем, режимом отображения и настройками аккаунта." },
-      { keywords: ["co2", "углерод", "эконом", "сниз"], answer: "Voltly рассчитывает процент сэкономленной энергии и снижение выбросов CO₂, чтобы показать экологический эффект." },
+      { keywords: ["co2", "углерод", "эконом", "сниз"], answer: "Voltix рассчитывает процент сэкономленной энергии и снижение выбросов CO₂, чтобы показать экологический эффект." },
     ],
   },
 };

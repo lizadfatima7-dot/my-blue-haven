@@ -14,8 +14,8 @@ import { z } from "zod";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Əlaqə — Voltly" },
-      { name: "description", content: "Voltly komandası ilə əlaqə saxlayın." },
+      { title: "Əlaqə — Voltix" },
+      { name: "description", content: "Voltix komandası ilə əlaqə saxlayın." },
     ],
   }),
   component: Contact,

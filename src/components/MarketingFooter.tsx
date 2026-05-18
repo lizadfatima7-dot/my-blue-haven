@@ -13,7 +13,7 @@ export function MarketingFooter() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg text-primary-foreground" style={{ background: "var(--gradient-blue)" }}>
               <Zap className="h-4 w-4" />
             </div>
-            <span className="font-semibold">Voltly</span>
+            <span className="font-semibold">Voltix</span>
           </Link>
           <p className="mt-3 text-sm text-muted-foreground">
             {t("footerDescription")}
@@ -36,7 +36,7 @@ export function MarketingFooter() {
         </div>
       </div>
       <p className="mt-10 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Voltly. {t("footerCare")}
+        © {new Date().getFullYear()} Voltix. {t("footerCare")}
       </p>
     </footer>
   );

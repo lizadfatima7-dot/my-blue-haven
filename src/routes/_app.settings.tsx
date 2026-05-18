@@ -144,7 +144,7 @@ function Settings() {
           {[
             { key: "usageAlerts", label: "Enerji istifadəsi və xərc limiti xəbərdarlıqları", desc: "İstifadə qəfil artdıqda və ya aylıq xərc limiti keçildikdə bildiriş alın." },
             { key: "weeklyReport", label: "Həftəlik xülasə", desc: "Hər bazar ertəsi qısa enerji icmalı alın." },
-            { key: "tips", label: "AI tövsiyələri və analizlər", desc: "Fərdiləşdirilmiş qənaət məsləhətləri." },
+            { key: "tips", label: "Ağıllı tövsiyələr və analizlər", desc: "Fərdiləşdirilmiş qənaət məsləhətləri." },
           ].map((n) => (
             <div key={n.key} className="flex items-center justify-between rounded-lg border p-3">
               <div>

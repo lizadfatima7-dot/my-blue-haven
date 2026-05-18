@@ -45,7 +45,7 @@ export function AppSidebar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg text-primary-foreground" style={{ background: "var(--gradient-blue)" }}>
             <Zap className="h-4 w-4" />
           </div>
-          <span className="font-semibold tracking-tight">Voltly</span>
+          <span className="font-semibold tracking-tight">Voltix</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>

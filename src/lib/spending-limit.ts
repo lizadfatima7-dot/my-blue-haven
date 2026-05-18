@@ -1,7 +1,7 @@
 const DEFAULT_SPENDING_LIMIT_AZN = 50;
 
 function keyFor(userId?: string) {
-  return `voltly-spending-limit-azn-${userId ?? "guest"}`;
+  return `voltix-spending-limit-azn-${userId ?? "guest"}`;
 }
 
 export function getSpendingLimit(userId?: string) {
@@ -14,5 +14,5 @@ export function getSpendingLimit(userId?: string) {
 export function setSpendingLimit(userId: string | undefined, limit: number) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(keyFor(userId), String(limit));
-  window.dispatchEvent(new CustomEvent("voltly-spending-limit-updated", { detail: { limit } }));
+  window.dispatchEvent(new CustomEvent("voltix-spending-limit-updated", { detail: { limit } }));
 }

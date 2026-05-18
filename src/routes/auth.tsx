@@ -30,6 +30,15 @@ function passwordScore(pw: string) {
 const STRENGTH_LABEL = ["Çox zəif", "Zəif", "Normal", "Güclü", "Əla"];
 const STRENGTH_COLOR = ["bg-destructive", "bg-destructive", "bg-amber-500", "bg-accent", "bg-accent"];
 
+const emailSchema = z.string().trim().toLowerCase().email("Genuine və düzgün e-poçt ünvanı daxil edin").max(255);
+const strongPasswordSchema = z.string()
+  .min(12, "Parol ən azı 12 simvol olmalıdır")
+  .max(72, "Parol 72 simvoldan uzun ola bilməz")
+  .regex(/[A-Z]/, "Parolda ən azı bir böyük hərf olmalıdır")
+  .regex(/[a-z]/, "Parolda ən azı bir kiçik hərf olmalıdır")
+  .regex(/[0-9]/, "Parolda ən azı bir rəqəm olmalıdır")
+  .regex(/[^A-Za-z0-9]/, "Parolda ən azı bir xüsusi simvol olmalıdır");
+
 function AuthPage() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
@@ -45,10 +54,16 @@ function AuthPage() {
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const email = String(fd.get("email"));
-    const password = String(fd.get("password"));
+    const parsed = z.object({
+      email: emailSchema,
+      password: z.string().min(1, "Parol daxil edin"),
+    }).safeParse({
+      email: fd.get("email"),
+      password: fd.get("password"),
+    });
+    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("Xoş gəlmisiniz!");
@@ -61,8 +76,8 @@ function AuthPage() {
     const schema = z.object({
       name: z.string().trim().min(1).max(60),
       subscriberCode: z.string().trim().min(5, "Abonent kodu ən azı 5 simvol olmalıdır").max(32),
-      email: z.string().trim().email().max(255),
-      password: z.string().min(8).max(72),
+      email: emailSchema,
+      password: strongPasswordSchema,
     });
     const parsed = schema.safeParse({
       name: fd.get("name"),
@@ -111,7 +126,7 @@ function AuthPage() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl text-primary-foreground" style={{ background: "var(--gradient-blue)" }}>
             <Zap className="h-5 w-5" />
           </div>
-          <span className="text-lg font-semibold">Voltly</span>
+          <span className="text-lg font-semibold">Voltix</span>
         </Link>
         <Card className="glass-strong" style={{ boxShadow: "var(--shadow-elegant)" }}>
           <CardHeader className="text-center">
@@ -145,7 +160,7 @@ function AuthPage() {
                   <form onSubmit={handleSignIn} className="space-y-4 pt-4">
                     <div className="space-y-2">
                       <Label htmlFor="si-email">E-poçt</Label>
-                      <Input id="si-email" name="email" type="email" required autoComplete="email" />
+                      <Input id="si-email" name="email" type="email" required autoComplete="email" inputMode="email" pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="si-password">Parol</Label>
@@ -178,7 +193,7 @@ function AuthPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="su-email">E-poçt</Label>
-                      <Input id="su-email" name="email" type="email" required maxLength={255} />
+                      <Input id="su-email" name="email" type="email" required maxLength={255} autoComplete="email" inputMode="email" pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="su-subscriber-code">Elektrik abonent kodu</Label>
@@ -188,7 +203,8 @@ function AuthPage() {
                     <div className="space-y-2">
                       <Label htmlFor="su-password">Parol</Label>
                       <Input
-                        id="su-password" name="password" type="password" required minLength={8} maxLength={72}
+                        id="su-password" name="password" type="password" required minLength={12} maxLength={72}
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{12,72}$"
                         value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password"
                       />
                       {pw && (
@@ -201,11 +217,11 @@ function AuthPage() {
                               />
                             ))}
                           </div>
-                          <p className="text-xs text-muted-foreground">{STRENGTH_LABEL[score]}</p>
+                          <p className="text-xs text-muted-foreground">{STRENGTH_LABEL[score]} · Minimum 12 simvol, böyük/kiçik hərf, rəqəm və xüsusi simvol tələb olunur.</p>
                         </div>
                       )}
                     </div>
-                    <Button type="submit" className="w-full" disabled={busy || score < 2}>
+                    <Button type="submit" className="w-full" disabled={busy || score < 4}>
                       {busy ? "Hesab yaradılır…" : "Hesab yarat"}
                     </Button>
                   </form>

@@ -61,9 +61,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Voltly — Ağıllı Enerji İdarəetməsi" },
+      { title: "Voltix — Ağıllı Enerji İdarəetməsi" },
       { name: "description", content: "Elektrik istifadəsini ağıllı izləyin, israfı azaldın, xərclərə qənaət edin və CO₂ izinizi aşağı salın." },
-      { property: "og:title", content: "Voltly — Ağıllı Enerji İdarəetməsi" },
+      { property: "og:title", content: "Voltix — Ağıllı Enerji İdarəetməsi" },
       { property: "og:description", content: "Real vaxt analitikası və cihaz nəzarəti ilə süni intellekt əsaslı enerji monitorinqi." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],

@@ -38,7 +38,7 @@ function Reports() {
   const co2 = monthlyCO2(devices);
   const savedPercent = Math.max(12, Math.min(34, 18 + effectiveDevices.filter((device) => !device.status).length * 3));
   const activeDevices = effectiveDevices.filter((device) => device.status).length;
-  const userLabel = user?.email ?? "demo.user@voltly.app";
+  const userLabel = user?.email ?? "demo.user@voltix.app";
   const summaryCards = [
     { label: "Aylıq enerji", value: `${totalKwh.toFixed(0)} kWh`, icon: Zap },
     { label: "Təxmini xərc", value: `${cost.toFixed(2)} AZN`, icon: TrendingDown },
@@ -48,7 +48,7 @@ function Reports() {
 
   const exportPDF = () => {
     const doc = new jsPDF();
-    doc.setFontSize(18); doc.text("Voltly — Aylıq Enerji Hesabatı", 14, 20);
+    doc.setFontSize(18); doc.text("Voltix — Aylıq Enerji Hesabatı", 14, 20);
     doc.setFontSize(11); doc.setTextColor(100);
     doc.text(`Yaradılma tarixi: ${new Date().toLocaleDateString()}`, 14, 28);
     doc.text(`İstifadəçi: ${userLabel}`, 14, 35);
@@ -78,7 +78,7 @@ function Reports() {
       body: daily.slice(-14).map((d) => [d.date, d.kwh.toFixed(2), d.cost.toFixed(2)]),
       headStyles: { fillColor: [70, 110, 230] },
     });
-    doc.save("voltly-report.pdf");
+    doc.save("voltix-report.pdf");
     toast.success("PDF hesabat yükləndi");
   };
 
@@ -99,7 +99,7 @@ function Reports() {
       { metric: "Ümumi cihazlar", value: effectiveDevices.length },
     ]);
     XLSX.utils.book_append_sheet(wb, summary, "Xülasə");
-    XLSX.writeFile(wb, "voltly-report.xlsx");
+    XLSX.writeFile(wb, "voltix-report.xlsx");
     toast.success("Excel hesabat yükləndi");
   };
 

@@ -1,5 +1,5 @@
 function keyFor(userId?: string) {
-  return `voltly-electricity-subscriber-code-${userId ?? "guest"}`;
+  return `voltix-electricity-subscriber-code-${userId ?? "guest"}`;
 }
 
 export function normalizeSubscriberCode(value: string) {
@@ -15,5 +15,5 @@ export function getSubscriberCode(userId?: string, metadataCode?: unknown) {
 export function setSubscriberCode(userId: string | undefined, code: string) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(keyFor(userId), normalizeSubscriberCode(code));
-  window.dispatchEvent(new CustomEvent("voltly-subscriber-code-updated", { detail: { code } }));
+  window.dispatchEvent(new CustomEvent("voltix-subscriber-code-updated", { detail: { code } }));
 }

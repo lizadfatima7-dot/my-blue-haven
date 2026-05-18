@@ -17,7 +17,7 @@ import { getSpendingLimit } from "@/lib/spending-limit";
 const NOTIFS = [
   { title: "Enerji istifadəsi 20% artıb", time: "2 dəq əvvəl" },
   { title: "Aylıq limitin 80%-nə çatmısınız", time: "1 saat əvvəl" },
-  { title: "AI tövsiyəsi: paltaryumanı pik saatdan kənara salın", time: "dünən" },
+  { title: "Ağıllı tövsiyə: paltaryumanı pik saatdan kənara salın", time: "dünən" },
 ];
 
 export function AppNavbar() {
@@ -45,10 +45,10 @@ export function AppNavbar() {
       .then(({ data }) => setDevices((data ?? []) as Device[]));
 
     const syncLimit = () => setSpendingLimitState(getSpendingLimit(user.id));
-    window.addEventListener("voltly-spending-limit-updated", syncLimit);
+    window.addEventListener("voltix-spending-limit-updated", syncLimit);
     window.addEventListener("storage", syncLimit);
     return () => {
-      window.removeEventListener("voltly-spending-limit-updated", syncLimit);
+      window.removeEventListener("voltix-spending-limit-updated", syncLimit);
       window.removeEventListener("storage", syncLimit);
     };
   }, [user]);

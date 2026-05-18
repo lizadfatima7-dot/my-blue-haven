@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { Activity, ArrowRight, BarChart3, Bot, Gauge, LeafyGreen, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { Activity, ArrowRight, BarChart3, Bot, CheckCircle2, CreditCard, Gauge, LeafyGreen, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingNav } from "@/components/MarketingNav";
 import { MarketingFooter } from "@/components/MarketingFooter";
 import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -34,6 +37,30 @@ const chartData = Array.from({ length: 24 }, (_, h) => ({
   usage: Number((1 + 1.6 * Math.exp(-Math.pow(h - 8, 2) / 12) + 2.2 * Math.exp(-Math.pow(h - 20, 2) / 8) + Math.random() * 0.4).toFixed(2)),
 }));
 
+function isValidCardNumber(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (digits.length < 13 || digits.length > 19 || /^(\d)\1+$/.test(digits)) return false;
+  let sum = 0;
+  let shouldDouble = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let n = Number(digits[i]);
+    if (shouldDouble) {
+      n *= 2;
+      if (n > 9) n -= 9;
+    }
+    sum += n;
+    shouldDouble = !shouldDouble;
+  }
+  return sum % 10 === 0;
+}
+
+function isValidExpiry(value: string) {
+  const match = /^(0[1-9]|1[0-2])\/(\d{2})$/.exec(value);
+  if (!match) return false;
+  const expiry = new Date(2000 + Number(match[2]), Number(match[1]), 0, 23, 59, 59);
+  return expiry >= new Date();
+}
+
 function Home() {
   const users = useCounter(12450);
   const kwh = useCounter(842000);
@@ -44,10 +71,10 @@ function Home() {
     return { title, text };
   });
   const featureIcons = [Gauge, BarChart3, Bot, LeafyGreen, ShieldCheck, Sparkles];
-  const faqs = t<string[]>("faqs").map((item) => {
-    const [question, answer] = item.split("|");
-    return { question, answer };
-  });
+  const [card, setCard] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvc, setCvc] = useState("");
+  const paymentValid = isValidCardNumber(card) && isValidExpiry(expiry) && /^\d{3,4}$/.test(cvc);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--gradient-soft)" }}>
@@ -174,18 +201,47 @@ function Home() {
           </div>
         </section>
 
-        <section className="mt-24">
+        <section className="mt-24 rounded-3xl border bg-card p-6 md:p-8" style={{ backgroundImage: "var(--gradient-card)" }}>
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("faqTitle")}</h2>
-            <p className="mt-3 text-muted-foreground">{t("faqDescription")}</p>
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Premium abunəlik</h2>
+            <p className="mt-3 text-muted-foreground">Premium analitika, inkişaf etmiş hesabatlar və ağıllı qənaət planları üçün kart məlumatını təhlükəsiz formatda yoxlayın.</p>
           </div>
-          <div className="mx-auto mt-10 grid max-w-4xl gap-4">
-            {faqs.map((faq) => (
-              <div key={faq.question} className="rounded-2xl border bg-card p-5 hover-lift" style={{ backgroundImage: "var(--gradient-card)" }}>
-                <h3 className="font-semibold">{faq.question}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{faq.answer}</p>
+          <Card className="mx-auto mt-8 max-w-xl glass-strong">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><CreditCard className="h-5 w-5" /> Təhlükəsiz ödəniş yoxlaması</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="premium-card">Kart nömrəsi</Label>
+                <Input id="premium-card" value={card} onChange={(e) => setCard(e.target.value.replace(/[^\d ]/g, "").slice(0, 23))} inputMode="numeric" autoComplete="cc-number" placeholder="4111 1111 1111 1111" />
               </div>
-            ))}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="premium-expiry">Bitmə tarixi</Label>
+                  <Input id="premium-expiry" value={expiry} onChange={(e) => setExpiry(e.target.value.replace(/[^\d/]/g, "").slice(0, 5))} autoComplete="cc-exp" placeholder="AA/İİ" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="premium-cvc">CVC</Label>
+                  <Input id="premium-cvc" value={cvc} onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" autoComplete="cc-csc" placeholder="CVC" />
+                </div>
+              </div>
+              <p className={`text-sm ${paymentValid ? "text-primary" : "text-muted-foreground"}`}>
+                {paymentValid ? "Kart formatı təsdiqləndi. Məlumatlar saxlanılmadan yalnız brauzerdə yoxlanılır." : "Real kart formatı, gələcək bitmə tarixi və düzgün CVC daxil edin."}
+              </p>
+              <Button className="w-full gap-2" disabled={!paymentValid}>
+                <CheckCircle2 className="h-4 w-4" /> Premiumu aktivləşdir
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="mt-24 rounded-3xl glass p-8 text-center">
+          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("faqTitle")}</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{t("faqDescription")}</p>
+          <div className="mt-6">
+            <Button asChild variant="outline" className="gap-2">
+              <Link to="/faq">FAQ səhifəsinə keç <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
           </div>
         </section>
 
