@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@/frontend/lib/theme";
 import { useAuth } from "@/frontend/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/frontend/integrations/supabase/client";
 import { Button } from "@/frontend/components/ui/button";
 import { Avatar, AvatarFallback } from "@/frontend/components/ui/avatar";
 import {
